@@ -50,14 +50,6 @@ const exampleGameState = {
       //     the chips the player bet in this round.)
 
       bet: 320, // The amount of chips the player put into the pot
-    },
-    {
-      id: 1, // Your own player looks similar, with one extension.
-      name: "Bob",
-      status: "active",
-      version: "Default random player",
-      stack: 1590,
-      bet: 80,
       hole_cards: [
         // The cards of the player. This is only visible for your own player
         //     except after showdown, when cards revealed are also included.
@@ -70,6 +62,14 @@ const exampleGameState = {
           suit: "spades",
         },
       ],
+    },
+    {
+      id: 1, // Your own player looks similar, with one extension.
+      name: "Bob",
+      status: "active",
+      version: "Default random player",
+      stack: 1590,
+      bet: 80,
     },
     {
       id: 2,
@@ -101,11 +101,11 @@ describe("test player", () => {
   const player = new Player();
 
   describe("bet request", () => {
-    // it("returns 0", () => {
-    //   const bet = jest.fn();
-    //   player.betRequest(exampleGameState, bet);
-    //   expect(bet).toHaveBeenCalledWith(1);
-    // });
+    it("returns 0", () => {
+      const bet = jest.fn();
+      player.betRequest(exampleGameState, bet);
+      expect(bet).toHaveBeenCalledWith(240)
+    });
   });
 
   describe("do we have a good hand", () => {
