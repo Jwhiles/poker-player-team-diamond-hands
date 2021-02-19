@@ -22,16 +22,20 @@ class Player {
       }
 
       if (haveWeAlreadyBet) {
-        maybe = Math.floor(Math.random() * 2)
+        const maybe = Math.floor(Math.random() * 2);
 
         return maybe ? bet(callAmount) : bet(0);
       }
 
       if (goodHand) {
-        return bet(currentBuyIn) 
+        return bet(currentBuyIn);
       }
 
-      return bet(0)
+      if (callAmount === minimum_raise && minimum_raise < 30) {
+        bet(callAmount);
+      }
+
+      return bet(0);
     } catch (e) {
       console.log(e);
       return bet(0);
@@ -68,7 +72,43 @@ class Player {
     return goodHand;
   }
 
+  getHighestCard(communityCards, privateCards) {
+    const allCards = communityCards.concat(privateCards);
+
+    return allCards.reduce((result, card) => {
+      if (result === null) {
+        return card;
+      }
+
+      if (betterThan(card, result)) {
+        return card;
+      }
+
+      return result;
+    }, null);
+  }
+
+  getHandType(communityCards, privateCards) {}
+
   showdown(gameState) {}
 }
+
+const handTypes = [
+  "straightFlush",
+  "four",
+  "fullHouse",
+  "flush",
+  "straight",
+  "three",
+  "twoPair",
+  "pair",
+  "highCard",
+];
+
+const betterThan = (cardOne, cardTwo) => {
+  const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
+
+  return ranks.indexOf(cardOne.rank) >= ranks.indexOf(cardTwo.rank);
+};
 
 module.exports = Player;

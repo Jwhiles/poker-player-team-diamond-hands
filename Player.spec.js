@@ -104,7 +104,7 @@ describe("test player", () => {
     it("returns 0", () => {
       const bet = jest.fn();
       player.betRequest(exampleGameState, bet);
-      expect(bet).toHaveBeenCalledWith(240)
+      expect(bet).toHaveBeenCalledWith(240);
     });
   });
 
@@ -119,6 +119,14 @@ describe("test player", () => {
       const privateCards = [{ rank: "2" }, { rank: "4" }];
       const community = [{ rank: "10" }, { rank: "5" }];
       expect(player.doWeHaveAGoodHand(privateCards, community)).toEqual(false);
+    });
+  });
+
+  describe("get highest card", () => {
+    it("returns the highest ranked card", () => {
+      const privateCards = [{ rank: "10" }, { rank: "4" }];
+      const community = [{ rank: "10" }, { rank: "5" }, { rank: "A" }];
+      expect(player.getHighestCard(privateCards, community)).toEqual({ rank: "A" });
     });
   });
 });
