@@ -1,11 +1,10 @@
-
 const tiers = [
   new Set(["AA", "KK", "AKs", "QQ", "AK"]),
   new Set(["JJ", "1010", "99"]),
   new Set(["88", "77", "AQs", "AQ"]),
-  new Set(["66", "55", "44", "33", "22", "AJs", "ATs", "A9s", "A8s"]),
+  new Set(["66", "55", "44", "33", "22", "AJs", "A10s", "A9s", "A8s"]),
   new Set(["A7s", "A6s", "A5s", "A4s", "A3s", "A2s", "KQs", "KQ"]),
-  new Set(["QJs", "JTs", "T9s", "98s", "87s", "76s", "65s"]),
+  new Set(["QJs", "J10s", "109s", "98s", "87s", "76s", "65s"]),
 ];
 
 const allin = 10000000000;
@@ -84,13 +83,13 @@ class Player {
 
         switch (tier) {
           case 1:
-            return bet(100000000);
-          case 2:
             return bet(currentBuyIn + minimum_raise + minimum_raise + minimum_raise);
-          case 3:
+          case 2:
             return bet(currentBuyIn + minimum_raise + minimum_raise);
+          case 3:
+            return bet(currentBuyIn + minimum_raise );
           case 4:
-            return bet(currentBuyIn + minimum_raise);
+            return bet(currentBuyIn );
           case 5:
             return bet(callAmount);
           case 6:
@@ -300,18 +299,6 @@ class Player {
 
   showdown(gameState) {}
 }
-
-const handTypes = {
-  straightFlush: 100,
-  four: 80,
-  fullHouse: 70,
-  flush: 60,
-  straight: 50,
-  three: 40,
-  twoPair: 30,
-  pair: 20,
-  highCard: 10,
-};
 
 const betterThan = (cardOne, cardTwo) => {
   const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
