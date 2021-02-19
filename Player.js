@@ -21,10 +21,20 @@ class Player {
         return bet(currentBuyIn + minimum_raise);
       }
 
-      haveWeAlreadyBet ? bet(callAmount) : goodHand ? bet(currentBuyIn) : bet(0);
+      if (haveWeAlreadyBet) {
+        maybe = Math.floor(Math.random() * 2)
+
+        return maybe ? bet(callAmount) : bet(0);
+      }
+
+      if (goodHand) {
+        return bet(currentBuyIn) 
+      }
+
+      return bet(0)
     } catch (e) {
       console.log(e);
-      bet(0);
+      return bet(0);
     }
   }
 
