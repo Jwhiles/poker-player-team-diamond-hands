@@ -7,9 +7,35 @@ const tiers = [
   new Set(["QJs", "JTs", "T9s", "98s", "87s", "76s", "65s"]),
 ];
 
+const allin = 10000000000
+
 class Player {
   VERSION() {
     return "0.2";
+  }
+
+  getTierOfHand(ourHand) {
+    const flush = this.doWeHaveAFlush(ourHand);
+    const straight = this.doWeHaveStraight(ourHand);
+    const twoPair = this.doWeHaveTwoPair(ourHand);
+    const pair = this.doWeHavePair(ourHand);
+    const three = this.doWeHaveThreeOfAKind(ourHand);
+    const four = this.doWeHaveFourOfAKind(ourHand);
+    const fullHouse = this.doWeHaveFullHouse(ourHand);
+
+    if (flush || four || fullHouse) {
+      return 1;
+    }
+
+    if (twoPair || straight || three) {
+      return 2;
+    }
+
+    if (pair) {
+      return 3;
+    }
+
+    return 4;
   }
 
   // [{ rank: Rank, suit: Suit }] -> Tier (number from 1-7 7 is trash)
@@ -83,8 +109,19 @@ class Player {
         }
       }
 
-      if (flush && numberOfCards === 5) {
-        return bet(100000000);
+      if (ourHand.length === 5) {
+        const tier = this.getTierOfHand(ourHand);
+
+        switch (tier) {
+          case 1:
+            return bet(allin);
+          case 2:
+            return bet(currentBuyIn + minimum_raise + minimum_raise);
+          case 3:
+            return bet(callAmount);
+          default:
+            return bet(0);
+        }
       }
 
       if (flush && numberOfCards === 4) {
@@ -211,7 +248,118 @@ class Player {
     }, null);
   }
 
-  getHandType(communityCards, privateCards) {}
+  doWeHavePair(hand) {
+    const ranks = hand.reduce((acc, card) => {
+      if (acc[card.rank]) {
+        acc[card.rank] += 1;
+      } else {
+        acc[card.rank] = 1;
+      }
+      return acc;
+    }, {});
+
+    let goodHand = false;
+
+    let pairCount = 0;
+
+    for (const rank in ranks) {
+      if (ranks[rank] >= 2) {
+        pairCount += 1;
+      }
+    }
+
+    return pairCount === 1;
+  }
+
+  doWeHaveTwoPair(hand) {
+    const ranks = hand.reduce((acc, card) => {
+      if (acc[card.rank]) {
+        acc[card.rank] += 1;
+      } else {
+        acc[card.rank] = 1;
+      }
+      return acc;
+    }, {});
+
+    let goodHand = false;
+
+    let pairCount = 0;
+
+    for (const rank in ranks) {
+      if (ranks[rank] >= 2) {
+        pairCount += 1;
+      }
+    }
+
+    return pairCount >= 2;
+  }
+
+  doWeHaveThreeOfAKind(hand) {
+    const ranks = hand.reduce((acc, card) => {
+      if (acc[card.rank]) {
+        acc[card.rank] += 1;
+      } else {
+        acc[card.rank] = 1;
+      }
+      return acc;
+    }, {});
+
+    let haveThree = false;
+
+    for (const rank in ranks) {
+      if (ranks[rank] === 3) {
+        haveThree = true;
+      }
+    }
+
+    return haveThree;
+  }
+
+  doWeHaveFourOfAKind(hand) {
+    const ranks = hand.reduce((acc, card) => {
+      if (acc[card.rank]) {
+        acc[card.rank] += 1;
+      } else {
+        acc[card.rank] = 1;
+      }
+      return acc;
+    }, {});
+
+    let haveFour = false;
+
+    for (const rank in ranks) {
+      if (ranks[rank] >= 4) {
+        haveFour = true;
+      }
+    }
+
+    return haveFour;
+  }
+
+  doWeHaveFullHouse(hand) {
+    const ranks = hand.reduce((acc, card) => {
+      if (acc[card.rank]) {
+        acc[card.rank] += 1;
+      } else {
+        acc[card.rank] = 1;
+      }
+      return acc;
+    }, {});
+
+    let haveThree = false;
+    let haveTwo = false;
+
+    for (const rank in ranks) {
+      if (ranks[rank] === 3) {
+        haveThree = true;
+      }
+      if (ranks[rank] === 2) {
+        haveTwo = true;
+      }
+    }
+
+    return haveThree && haveTwo;
+  }
 
   showdown(gameState) {}
 }

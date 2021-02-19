@@ -166,6 +166,42 @@ describe("test player", () => {
     });
   });
 
+  describe('do we have a twopair', () => {
+    it("returns true if we do", () => {
+      expect(
+        player.doWeHaveTwoPair([
+          { rank: "A", suit: "spades" },
+          { rank: "A", suit: "hearts" },
+          { rank: "10", suit: "spades" },
+          { rank: "10", suit: "hearts" },
+        ])
+      ).toEqual(true);
+    });
+
+    it("returns true if there's a triple if we do not", () => {
+      expect(
+        player.doWeHaveTwoPair([
+          { rank: "A", suit: "spades" },
+          { rank: "A", suit: "hearts" },
+          { rank: "10", suit: "spades" },
+          { rank: "10", suit: "spades" },
+          { rank: "10", suit: "hearts" },
+        ])
+      ).toEqual(true);
+    });
+
+    it("returns false if we do not", () => {
+      expect(
+        player.doWeHaveTwoPair([
+          { rank: "A", suit: "spades" },
+          { rank: "A", suit: "hearts" },
+          { rank: "9", suit: "spades" },
+          { rank: "10", suit: "hearts" },
+        ])
+      ).toEqual(false);
+    });
+  })
+
   describe("getTierOfStartingHand", () => {
     it("returns correct tier for two aces", () => {
       expect(
@@ -181,6 +217,41 @@ describe("test player", () => {
         player.getTierOfStartingHand([
           { rank: "A", suit: "spades" },
           { rank: "J", suit: "spades" },
+        ])
+      ).toEqual(4);
+    });
+  });
+
+  describe("getTierOfHand", () => {
+    it("returns correct tier for pair", () => {
+      expect(
+        player.getTierOfHand([
+          { rank: "A", suit: "spades" },
+          { rank: "A", suit: "hearts" },
+        ])
+      ).toEqual(3);
+    });
+
+    it("returns correct tier for full house", () => {
+      expect(
+        player.getTierOfHand([
+          { rank: "A", suit: "spades" },
+          { rank: "A", suit: "hearts" },
+          { rank: "2", suit: "spades" },
+          { rank: "2", suit: "hearts" },
+          { rank: "2", suit: "diamonds" },
+        ])
+      ).toEqual(1);
+    });
+
+    it("returns correct tier for bad hand", () => {
+      expect(
+        player.getTierOfHand([
+          { rank: "Q", suit: "spades" },
+          { rank: "A", suit: "hearts" },
+          { rank: "5", suit: "spades" },
+          { rank: "6", suit: "hearts" },
+          { rank: "2", suit: "diamonds" },
         ])
       ).toEqual(4);
     });
