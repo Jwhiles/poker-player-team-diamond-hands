@@ -165,4 +165,24 @@ describe("test player", () => {
       expect(player.doWeHaveAFlush(hand)).toEqual(false);
     });
   });
+
+  describe("getTierOfStartingHand", () => {
+    it("returns correct tier for two aces", () => {
+      expect(
+        player.getTierOfStartingHand([
+          { rank: "A", suit: "spades" },
+          { rank: "A", suit: "hearts" },
+        ])
+      ).toEqual(1);
+    });
+
+    it("returns correct tier for two aces", () => {
+      expect(
+        player.getTierOfStartingHand([
+          { rank: "A", suit: "spades" },
+          { rank: "J", suit: "spades" },
+        ])
+      ).toEqual(4);
+    });
+  });
 });

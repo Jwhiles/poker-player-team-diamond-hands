@@ -1,13 +1,52 @@
+const tiers = [
+  new Set(["AA", "KK", "AKs", "QQ", "AK"]),
+  new Set(["JJ", "1010", "99"]),
+  new Set(["88", "77", "AQs", "AQ"]),
+  new Set(["66", "55", "44", "33", "22", "AJs", "ATs", "A9s", "A8s"]),
+  new Set(["A7s", "A6s", "A5s", "A4s", "A3s", "A2s", "KQs", "KQ"]),
+  new Set(["QJs", "JTs", "T9s", "98s", "87s", "76s", "65s"]),
+];
+
 class Player {
   VERSION() {
     return "0.2";
   }
 
+  // [{ rank: Rank, suit: Suit }] -> Tier (number from 1-7 7 is trash)
+  getTierOfStartingHand([cardOne, cardTwo]) {
+    const suited = cardOne.suit === cardTwo.suit;
+
+    let code = betterThan(cardOne, cardTwo)
+      ? cardOne.rank + cardTwo.rank
+      : cardTwo.rank + cardOne.rank;
+
+    if (suited) {
+      code = code + "s";
+    }
+
+    for (const [i, v] of tiers.entries()) {
+      if (v.has(code)) {
+        return i + 1;
+      }
+    }
+
+    return 7;
+  }
+
   betRequest(gameState, bet) {
+    const us = this.getOurPlayer(gameState);
+
+    if (gameState["community_cards"].length === 0) {
+      const tier = this.getTierOfStartingHand(us["hole_cards"]);
+    }
+    // Are we looking at two cards?
+    // Look which tier the hand falls into
+    // depending on the tier, either call, raise, or fold
+
+    // Are we looking at more cards
+
     try {
       const { players, in_action, current_buy_in, minimum_raise, small_blind } = gameState;
-
-      const us = this.getOurPlayer(gameState);
 
       const callAmount = current_buy_in - us.bet;
 
