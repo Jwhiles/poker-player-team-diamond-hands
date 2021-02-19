@@ -7,7 +7,7 @@ const tiers = [
   new Set(["QJs", "JTs", "T9s", "98s", "87s", "76s", "65s"]),
 ];
 
-const allin = 10000000000
+const allin = 10000000000;
 
 class Player {
   VERSION() {
@@ -60,12 +60,6 @@ class Player {
   }
 
   betRequest(gameState, bet) {
-    // Are we looking at two cards?
-    // Look which tier the hand falls into
-    // depending on the tier, either call, raise, or fold
-
-    // Are we looking at more cards
-
     try {
       const us = this.getOurPlayer(gameState);
 
@@ -79,14 +73,12 @@ class Player {
 
       const ourHand = gameState["community_cards"].concat(us["hole_cards"]);
 
-      const goodHand = this.pairsOrWhatever(gameState["community_cards"], us["hole_cards"]);
-
       const flush = this.doWeHaveAFlush(ourHand);
       const haveAStraight = this.doWeHaveStraight(ourHand);
 
       const numberOfCards = ourHand.length;
 
-      if (gameState["community_cards"].length === 0) {
+      if (this.start(ourHand)) {
         const tier = this.getTierOfStartingHand(us["hole_cards"]);
 
         switch (tier) {
@@ -109,58 +101,18 @@ class Player {
         }
       }
 
-      if (ourHand.length === 5) {
-        const tier = this.getTierOfHand(ourHand);
+      const tier = this.getTierOfHand(ourHand);
 
-        switch (tier) {
-          case 1:
-            return bet(allin);
-          case 2:
-            return bet(currentBuyIn + minimum_raise + minimum_raise);
-          case 3:
-            return bet(callAmount);
-          default:
-            return bet(0);
-        }
+      switch (tier) {
+        case 1:
+          return bet(allin);
+        case 2:
+          return bet(currentBuyIn + minimum_raise + minimum_raise);
+        case 3:
+          return bet(callAmount);
+        default:
+          return bet(0);
       }
-
-      if (flush && numberOfCards === 4) {
-        return bet(callAmount);
-      }
-
-      if (flush && numberOfCards === 3) {
-        const maybe = Math.floor(Math.random * 2);
-
-        return maybe ? bet(callAmount) : bet(0);
-      }
-
-      if (haveAStraight && numberOfCards === 5) {
-        return bet(100000000);
-      }
-
-      if (haveAStraight && numberOfCards === 4) {
-        return bet(callAmount);
-      }
-
-      if (haveAStraight && numberOfCards === 3) {
-        const maybe = Math.floor(Math.random * 2);
-
-        return maybe ? bet(callAmount) : bet(0);
-      }
-
-      if (haveWeAlreadyBet && goodHand) {
-        return bet(currentBuyIn + minimum_raise);
-      }
-
-      if (goodHand) {
-        return bet(currentBuyIn);
-      }
-
-      if (callAmount === minimum_raise && minimum_raise < 30) {
-        return bet(callAmount);
-      }
-
-      return bet(0);
     } catch (e) {
       console.log(e);
       return bet(0);
@@ -171,30 +123,6 @@ class Player {
     return gameState.players.find(player => {
       return player.name === "Team Diamond Hands";
     });
-  }
-
-  // be wary of community card
-  pairsOrWhatever(communityCards, privateCards) {
-    const allCards = communityCards.concat(privateCards);
-
-    const ranks = allCards.reduce((acc, card) => {
-      if (acc[card.rank]) {
-        acc[card.rank] += 1;
-      } else {
-        acc[card.rank] = 1;
-      }
-      return acc;
-    }, {});
-
-    let goodHand = false;
-
-    for (const rank in ranks) {
-      if (ranks[rank] >= 2) {
-        goodHand = true;
-      }
-    }
-
-    return goodHand;
   }
 
   doWeHaveAFlush(hand) {
@@ -359,6 +287,14 @@ class Player {
     }
 
     return haveThree && haveTwo;
+  }
+
+  start(hand) {
+    return hand.length === 2;
+  }
+
+  end(hand) {
+    return hand.length === 5;
   }
 
   showdown(gameState) {}
