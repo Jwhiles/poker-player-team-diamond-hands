@@ -76,6 +76,7 @@ class Player {
   }
 
   betRequest(gameState, bet) {
+    console.log(gameState)
     try {
       const us = this.getOurPlayer(gameState);
 
@@ -101,6 +102,7 @@ class Player {
         // check counter, don't continue driving up after two rounds
         //
         // check out stack against current buy in
+        //
 
         switch (tier) {
           case 1:
