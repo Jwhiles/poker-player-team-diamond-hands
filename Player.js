@@ -34,11 +34,6 @@ class Player {
   }
 
   betRequest(gameState, bet) {
-    const us = this.getOurPlayer(gameState);
-
-    if (gameState["community_cards"].length === 0) {
-      const tier = this.getTierOfStartingHand(us["hole_cards"]);
-    }
     // Are we looking at two cards?
     // Look which tier the hand falls into
     // depending on the tier, either call, raise, or fold
@@ -46,6 +41,8 @@ class Player {
     // Are we looking at more cards
 
     try {
+      const us = this.getOurPlayer(gameState);
+
       const { players, in_action, current_buy_in, minimum_raise, small_blind } = gameState;
 
       const callAmount = current_buy_in - us.bet;
@@ -62,6 +59,29 @@ class Player {
       const haveAStraight = this.doWeHaveStraight(ourHand);
 
       const numberOfCards = ourHand.length;
+
+      if (gameState["community_cards"].length === 0) {
+        const tier = this.getTierOfStartingHand(us["hole_cards"]);
+
+        switch (tier) {
+          case 1:
+            return bet(100000000);
+          case 2:
+            return bet(currentBuyIn + minimum_raise + minimum_raise + minimum_raise);
+          case 3:
+            return bet(currentBuyIn + minimum_raise + minimum_raise);
+          case 4:
+            return bet(currentBuyIn + minimum_raise);
+          case 5:
+            return bet(callAmount);
+          case 6:
+            return bet(callAmount);
+          case 7:
+            return bet(0);
+          default:
+            return bet(0);
+        }
+      }
 
       if (flush && numberOfCards === 5) {
         return bet(100000000);
@@ -93,10 +113,6 @@ class Player {
 
       if (haveWeAlreadyBet && goodHand) {
         return bet(currentBuyIn + minimum_raise);
-      }
-
-      if (haveWeAlreadyBet) {
-        return bet(callAmount);
       }
 
       if (goodHand) {
