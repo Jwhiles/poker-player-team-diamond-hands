@@ -1,3 +1,15 @@
+const PokerHand = require("poker-hand-evaluator");
+
+const convertCard = ({ suit, rank }) => {
+  const s = suit.split("")[0].toUpperCase();
+
+  const r = rank === "10" ? "T" : rank;
+
+  return `${r}${s}`;
+};
+
+convertHand = hand => hand.map(convertCard).join(" ");
+
 const tiers = [
   new Set(["AA", "KK", "AKs", "QQ", "AK"]),
   new Set(["JJ", "1010", "99"]),
@@ -122,6 +134,24 @@ class Player {
         }
       }
 
+      if (this.end(ourHand)) {
+        const rating = this.evaluateEndingHand(ourHand)
+
+        if (rating < 500) {
+          return bet(allin);
+        }
+
+        if (rating < 1800) {
+          return bet(currentBuyIn);
+        }
+
+        if (rating < 2600) {
+          return bet(callAmount);
+        }
+          
+        return bet(0)
+      }
+
       const tier = this.getTierOfHand(ourHand);
 
       switch (tier) {
@@ -138,6 +168,11 @@ class Player {
       console.log(e);
       return bet(0);
     }
+  }
+
+  evaluateEndingHand(hand) {
+    const ph = new PokerHand(convertHand(hand));
+    return ph.score
   }
 
   getOurPlayer(gameState) {

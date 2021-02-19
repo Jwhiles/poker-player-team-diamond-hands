@@ -108,7 +108,6 @@ describe("test player", () => {
     });
   });
 
-
   describe("get highest card", () => {
     it("returns the highest ranked card", () => {
       const privateCards = [{ rank: "10" }, { rank: "4" }];
@@ -153,7 +152,7 @@ describe("test player", () => {
     });
   });
 
-  describe('do we have a twopair', () => {
+  describe("do we have a twopair", () => {
     it("returns true if we do", () => {
       expect(
         player.doWeHaveTwoPair([
@@ -187,7 +186,7 @@ describe("test player", () => {
         ])
       ).toEqual(false);
     });
-  })
+  });
 
   describe("getTierOfStartingHand", () => {
     it("returns correct tier for two aces", () => {
@@ -241,6 +240,68 @@ describe("test player", () => {
           { rank: "2", suit: "diamonds" },
         ])
       ).toEqual(4);
+    });
+  });
+
+  describe.only("evaluateEndingHand", () => {
+    it("gets value for hand", () => {
+      expect(
+        player.evaluateEndingHand([
+          { rank: "A", suit: "spades" },
+          { rank: "A", suit: "hearts" },
+          { rank: "2", suit: "spades" },
+          { rank: "2", suit: "hearts" },
+          { rank: "2", suit: "diamonds" },
+        ])
+      ).toEqual(311);
+    });
+
+    it("gets value for okay hand", () => {
+      expect(
+        player.evaluateEndingHand([
+          { rank: "A", suit: "spades" },
+          { rank: "A", suit: "hearts" },
+          { rank: "2", suit: "spades" },
+          { rank: "5", suit: "hearts" },
+          { rank: "8", suit: "diamonds" },
+        ])
+      ).toEqual(3522);
+    });
+
+    it("gets value for okay hand", () => {
+      expect(
+        player.evaluateEndingHand([
+          { rank: "A", suit: "spades" },
+          { rank: "A", suit: "hearts" },
+          { rank: "2", suit: "spades" },
+          { rank: "2", suit: "hearts" },
+          { rank: "8", suit: "diamonds" },
+        ])
+      ).toEqual(2594);
+    });
+
+    it("gets value for meh hand", () => {
+      expect(
+        player.evaluateEndingHand([
+          { rank: "A", suit: "spades" },
+          { rank: "2", suit: "hearts" },
+          { rank: "10", suit: "spades" },
+          { rank: "10", suit: "hearts" },
+          { rank: "8", suit: "diamonds" },
+        ])
+      ).toEqual(4245);
+    });
+
+    it("gets value for bad hand", () => {
+      expect(
+        player.evaluateEndingHand([
+          { rank: "Q", suit: "spades" },
+          { rank: "A", suit: "hearts" },
+          { rank: "5", suit: "spades" },
+          { rank: "6", suit: "hearts" },
+          { rank: "2", suit: "diamonds" },
+        ])
+      ).toEqual(6462);
     });
   });
 });
