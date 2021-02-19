@@ -103,38 +103,42 @@ class Player {
         // check out stack against current buy in
         //
         //
-        const firstBet = gameState["bet_index"] === 0;
+        const activeCount = gameState.players.filter(({ status}) => {
+          return status === 'active'
+        }).length
+
+        const stop = gameState["bet_index"] > activeCount * 2
 
         switch (tier) {
           case 1:
-            if (firstBet) {
+            if (!stop) {
               return bet(currentBuyIn + minimum_raise + minimum_raise + minimum_raise);
             } else {
               return bet(callAmount);
             }
           case 2:
-            if (firstBet) {
+            if (!stop) {
               return bet(currentBuyIn + minimum_raise + minimum_raise);
             } else {
               return bet(callAmount);
             }
           case 3:
-            if (dangerZone || !firstBet) {
+            if (dangerZone || stop) {
               return bet(callAmount);
             }
             return bet(currentBuyIn + minimum_raise);
           case 4:
-            if (dangerZone || !firstBet) {
+            if (dangerZone || stop) {
               return bet(callAmount);
             }
             return bet(currentBuyIn);
           case 5:
-            if (dangerZone || !firstBet) {
+            if (dangerZone || stop) {
               return bet(0);
             }
             return bet(callAmount);
           case 6:
-            if (dangerZone || !firstBet) {
+            if (dangerZone || stop) {
               return bet(0);
             }
             return bet(callAmount);
