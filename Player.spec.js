@@ -112,13 +112,13 @@ describe("test player", () => {
     it("returns true", () => {
       const privateCards = [{ rank: "10" }, { rank: "4" }];
       const community = [{ rank: "10" }, { rank: "5" }];
-      expect(player.doWeHaveAGoodHand(privateCards, community)).toEqual(true);
+      expect(player.pairsOrWhatever(privateCards, community)).toEqual(true);
     });
 
     it("returns false", () => {
       const privateCards = [{ rank: "2" }, { rank: "4" }];
       const community = [{ rank: "10" }, { rank: "5" }];
-      expect(player.doWeHaveAGoodHand(privateCards, community)).toEqual(false);
+      expect(player.pairsOrWhatever(privateCards, community)).toEqual(false);
     });
   });
 

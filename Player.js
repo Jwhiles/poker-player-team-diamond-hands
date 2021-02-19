@@ -17,8 +17,7 @@ class Player {
 
       const ourHand = gameState["community_cards"].concat(us["hole_cards"]);
 
-      const goodHand = this.doWeHaveAGoodHand(gameState["community_cards"], us["hole_cards"]);
-
+      const goodHand = this.pairsOrWhatever(gameState["community_cards"], us["hole_cards"]);
 
       const flush = this.doWeHaveAFlush(ourHand);
       const haveAStraight = this.doWeHaveStraight(ourHand);
@@ -83,7 +82,7 @@ class Player {
   }
 
   // be wary of community card
-  doWeHaveAGoodHand(communityCards, privateCards) {
+  pairsOrWhatever(communityCards, privateCards) {
     const allCards = communityCards.concat(privateCards);
 
     const ranks = allCards.reduce((acc, card) => {
