@@ -38,6 +38,10 @@ class Player {
     return 4;
   }
 
+  getPortionOfStack(stack, price) {
+    return price / stack;
+  }
+
   // [{ rank: Rank, suit: Suit }] -> Tier (number from 1-7 7 is trash)
   getTierOfStartingHand([cardOne, cardTwo]) {
     const suited = cardOne.suit === cardTwo.suit;
@@ -81,18 +85,35 @@ class Player {
       if (this.start(ourHand)) {
         const tier = this.getTierOfStartingHand(us["hole_cards"]);
 
+        const dangerZone = this.getPortionOfStack(us.stack, currentBuyIn) >= 0.3;
+        // check counter, don't continue driving up after two rounds
+        //
+        // check out stack against current buy in
+
         switch (tier) {
           case 1:
             return bet(currentBuyIn + minimum_raise + minimum_raise + minimum_raise);
           case 2:
             return bet(currentBuyIn + minimum_raise + minimum_raise);
           case 3:
-            return bet(currentBuyIn + minimum_raise );
+            if (dangerZone) {
+              return bet(callAmount);
+            }
+            return bet(currentBuyIn + minimum_raise);
           case 4:
-            return bet(currentBuyIn );
+            if (dangerZone) {
+              return bet(callAmount);
+            }
+            return bet(currentBuyIn);
           case 5:
+            if (dangerZone) {
+              return bet(0);
+            }
             return bet(callAmount);
           case 6:
+            if (dangerZone) {
+              return bet(0);
+            }
             return bet(callAmount);
           case 7:
             return bet(0);
