@@ -5,7 +5,7 @@ class Player {
 
   betRequest(gameState, bet) {
     try {
-      const { players, in_action, current_buy_in, minimum_raise } = gameState;
+      const { players, in_action, current_buy_in, minimum_raise, small_blind } = gameState;
 
       const us = this.getOurPlayer(gameState);
 
@@ -13,7 +13,7 @@ class Player {
 
       const currentBuyIn = current_buy_in - us.bet + minimum_raise;
 
-      const haveWeAlreadyBet = us.bet > 0;
+      const haveWeAlreadyBet = us.bet > small_blind;
 
       const betOrNot = this.doWeHaveAGoodHand(gameState["community_cards"], us["hole_cards"]);
 
