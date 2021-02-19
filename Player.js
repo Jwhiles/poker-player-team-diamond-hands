@@ -31,6 +31,13 @@ class Player {
         return bet(callAmount);
       }
 
+      if (haveAStraight && numberOfCards === 3) {
+        const maybe = Math.floor(Math.random * 2)
+
+
+        return maybe ? bet(callAmount) : bet(0);
+      }
+
       if (haveWeAlreadyBet && goodHand) {
         return bet(currentBuyIn + minimum_raise);
       }
