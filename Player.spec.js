@@ -140,10 +140,29 @@ describe("test player", () => {
       const hand = [{ rank: "10" }, { rank: "8" }, { rank: "J" }, { rank: "Q" }, { rank: "K" }];
       expect(player.doWeHaveStraight(hand)).toEqual(false);
     });
+  });
 
-    it("returns false if we do not have a straight", () => {
-      const hand = [{ rank: "10" }, { rank: "J" }, { rank: "Q" }, { rank: "K" }];
-      expect(player.doWeHaveStraight(hand)).toEqual(false);
+  describe("do we have a flush", () => {
+    it("returns true if we have a flush", () => {
+      const hand = [
+        { rank: "10", suit: "hearts" },
+        { rank: "9", suit: "hearts" },
+        { rank: "J", suit: "hearts" },
+        { rank: "Q", suit: "hearts" },
+        { rank: "K", suit: "hearts" },
+      ];
+      expect(player.doWeHaveAFlush(hand)).toEqual(true);
+    });
+
+    it("returns false if we do not have a flush", () => {
+      const hand = [
+        { rank: "10", suit: "spades" },
+        { rank: "9", suit: "hearts" },
+        { rank: "J", suit: "hearts" },
+        { rank: "Q", suit: "hearts" },
+        { rank: "K", suit: "hearts" },
+      ];
+      expect(player.doWeHaveAFlush(hand)).toEqual(false);
     });
   });
 });

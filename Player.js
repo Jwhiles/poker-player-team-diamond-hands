@@ -19,9 +19,25 @@ class Player {
 
       const goodHand = this.doWeHaveAGoodHand(gameState["community_cards"], us["hole_cards"]);
 
+
+      const flush = this.doWeHaveAFlush(ourHand);
       const haveAStraight = this.doWeHaveStraight(ourHand);
 
       const numberOfCards = ourHand.length;
+
+      if (flush && numberOfCards === 5) {
+        return bet(100000000);
+      }
+
+      if (flush && numberOfCards === 4) {
+        return bet(callAmount);
+      }
+
+      if (flush && numberOfCards === 3) {
+        const maybe = Math.floor(Math.random * 2);
+
+        return maybe ? bet(callAmount) : bet(0);
+      }
 
       if (haveAStraight && numberOfCards === 5) {
         return bet(100000000);
@@ -32,8 +48,7 @@ class Player {
       }
 
       if (haveAStraight && numberOfCards === 3) {
-        const maybe = Math.floor(Math.random * 2)
-
+        const maybe = Math.floor(Math.random * 2);
 
         return maybe ? bet(callAmount) : bet(0);
       }
@@ -51,7 +66,7 @@ class Player {
       }
 
       if (callAmount === minimum_raise && minimum_raise < 30) {
-        bet(callAmount);
+        return bet(callAmount);
       }
 
       return bet(0);
@@ -91,7 +106,20 @@ class Player {
     return goodHand;
   }
 
-  doWeHaveAFlush(hand) {}
+  doWeHaveAFlush(hand) {
+    return hand.reduce(
+      ({ isFlush, suit }, current) => {
+        if (suit === null) {
+          return { isFlush, suit: current.suit };
+        } else if (suit === current.suit) {
+          return { isFlush, suit };
+        } else {
+          return { isFlush: false, suit };
+        }
+      },
+      { isFlush: true, suit: null }
+    ).isFlush;
+  }
 
   doWeHaveStraight(hand) {
     const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
