@@ -4,13 +4,15 @@ class Player {
   }
 
   betRequest(gameState, bet) {
-    // const { players, current_buy_in }
+    const { players, in_action, current_buy_in, minimum_raise } = gameState
 
-    // const callAmount = current_buy_in - players[in_action][bet]
+    const callAmount = current_buy_in - players[in_action]['bet']
+
+    const currentBuyIn = current_buy_in - players[in_action]['bet'] + minimum_raise
 
     const betOrNot = Math.floor(Math.random() * 2)
 
-    betOrNot ? bet(100000000) : bet(0)
+    betOrNot ? bet(callAmount) : bet(0)
   }
 
   static showdown(gameState) {
