@@ -76,7 +76,6 @@ class Player {
   }
 
   betRequest(gameState, bet) {
-    console.log(gameState)
     try {
       const us = this.getOurPlayer(gameState);
 
@@ -103,29 +102,39 @@ class Player {
         //
         // check out stack against current buy in
         //
+        //
+        const firstBet = gameState["bet_index"] === 0;
 
         switch (tier) {
           case 1:
-            return bet(currentBuyIn + minimum_raise + minimum_raise + minimum_raise);
+            if (firstBet) {
+              return bet(currentBuyIn + minimum_raise + minimum_raise + minimum_raise);
+            } else {
+              return bet(callAmount);
+            }
           case 2:
-            return bet(currentBuyIn + minimum_raise + minimum_raise);
+            if (firstBet) {
+              return bet(currentBuyIn + minimum_raise + minimum_raise);
+            } else {
+              return bet(callAmount);
+            }
           case 3:
-            if (dangerZone) {
+            if (dangerZone || !firstBet) {
               return bet(callAmount);
             }
             return bet(currentBuyIn + minimum_raise);
           case 4:
-            if (dangerZone) {
+            if (dangerZone || !firstBet) {
               return bet(callAmount);
             }
             return bet(currentBuyIn);
           case 5:
-            if (dangerZone) {
+            if (dangerZone || !firstBet) {
               return bet(0);
             }
             return bet(callAmount);
           case 6:
-            if (dangerZone) {
+            if (dangerZone || !firstBet) {
               return bet(0);
             }
             return bet(callAmount);
@@ -137,7 +146,7 @@ class Player {
       }
 
       if (this.end(ourHand)) {
-        const rating = this.evaluateEndingHand(ourHand)
+        const rating = this.evaluateEndingHand(ourHand);
 
         if (rating < 500) {
           return bet(allin);
@@ -150,8 +159,8 @@ class Player {
         if (rating < 2600) {
           return bet(callAmount);
         }
-          
-        return bet(0)
+
+        return bet(0);
       }
 
       const tier = this.getTierOfHand(ourHand);
@@ -174,7 +183,7 @@ class Player {
 
   evaluateEndingHand(hand) {
     const ph = new PokerHand(convertHand(hand));
-    return ph.score
+    return ph.score;
   }
 
   getOurPlayer(gameState) {
