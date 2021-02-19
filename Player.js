@@ -15,16 +15,22 @@ class Player {
 
       const haveWeAlreadyBet = us.bet > small_blind;
 
+      const ourHand = (gameState["community_cards"]).concat(us["hole_cards"])
+
       const goodHand = this.doWeHaveAGoodHand(gameState["community_cards"], us["hole_cards"]);
+
+      const haveAStraight = this.doWeHaveStraight(ourHand);
+
+      if (haveAStraight) {
+        return bet(100000000)
+      }
 
       if (haveWeAlreadyBet && goodHand) {
         return bet(currentBuyIn + minimum_raise);
       }
 
       if (haveWeAlreadyBet) {
-        const maybe = Math.floor(Math.random() * 2);
-
-        return maybe ? bet(callAmount) : bet(0);
+        bet(callAmount) 
       }
 
       if (goodHand) {
@@ -70,6 +76,30 @@ class Player {
     }
 
     return goodHand;
+  }
+
+  doWeHaveStraight(hand) {
+    if (hand.length < 5) {
+      return false;
+    }
+
+    const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
+    const indexes = hand.map(card => ranks.indexOf(card.rank));
+
+    indexes.sort((a, b) => a - b);
+
+    return indexes.reduce(
+      ({ isStraight, prev }, current) => {
+        if (prev === null) {
+          return { isStraight, prev: current };
+        } else if (current - 1 === prev) {
+          return { isStraight, prev: current };
+        } else {
+          return { isStraight: false, prev: current };
+        }
+      },
+      { isStraight: true, prev: null }
+    ).isStraight;
   }
 
   getHighestCard(communityCards, privateCards) {

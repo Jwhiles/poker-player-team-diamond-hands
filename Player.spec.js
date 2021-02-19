@@ -129,4 +129,21 @@ describe("test player", () => {
       expect(player.getHighestCard(privateCards, community)).toEqual({ rank: "A" });
     });
   });
+
+  describe("do we have a straight", () => {
+    it("returns true if we have a straight", () => {
+      const hand = [{ rank: "10" }, { rank: "9" }, { rank: "J" }, { rank: "Q" }, { rank: "K" }];
+      expect(player.doWeHaveStraight(hand)).toEqual(true);
+    });
+
+    it("returns false if we do not have a straight", () => {
+      const hand = [{ rank: "10" }, { rank: "8" }, { rank: "J" }, { rank: "Q" }, { rank: "K" }];
+      expect(player.doWeHaveStraight(hand)).toEqual(false);
+    });
+
+    it("returns false if we do not have a straight", () => {
+      const hand = [{ rank: "10" }, { rank: "J" }, { rank: "Q" }, { rank: "K" }];
+      expect(player.doWeHaveStraight(hand)).toEqual(false);
+    });
+  });
 });
