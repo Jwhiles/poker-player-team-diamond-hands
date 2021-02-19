@@ -15,9 +15,13 @@ class Player {
 
       const haveWeAlreadyBet = us.bet > small_blind;
 
-      const betOrNot = this.doWeHaveAGoodHand(gameState["community_cards"], us["hole_cards"]);
+      const goodHand = this.doWeHaveAGoodHand(gameState["community_cards"], us["hole_cards"]);
 
-      haveWeAlreadyBet ? bet(callAmount) : betOrNot ? bet(currentBuyIn) : bet(0);
+      if (haveWeAlreadyBet && goodHand) {
+        return bet(currentBuyIn + minimum_raise);
+      }
+
+      haveWeAlreadyBet ? bet(callAmount) : goodHand ? bet(currentBuyIn) : bet(0);
     } catch (e) {
       console.log(e);
       bet(0);
