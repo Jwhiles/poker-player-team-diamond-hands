@@ -7,15 +7,15 @@ class Player {
     try {
       const { players, in_action, current_buy_in, minimum_raise } = gameState;
 
-      const callAmount = current_buy_in - players[in_action]["bet"];
-
-      const currentBuyIn = current_buy_in - players[in_action]["bet"] + minimum_raise;
-
       const us = this.getOurPlayer(gameState);
+
+      const callAmount = current_buy_in - us.bet;
+
+      const currentBuyIn = current_buy_in - us.bet + minimum_raise;
 
       const haveWeAlreadyBet = us.bet > 0;
 
-      const betOrNot = this.doWeHaveAGoodHand(gameState['community_cards'], us["hole_cards"]);
+      const betOrNot = this.doWeHaveAGoodHand(gameState["community_cards"], us["hole_cards"]);
 
       haveWeAlreadyBet ? bet(currentBuyIn) : betOrNot ? bet(currentBuyIn) : bet(0);
     } catch (e) {
