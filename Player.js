@@ -15,14 +15,20 @@ class Player {
 
       const haveWeAlreadyBet = us.bet > small_blind;
 
-      const ourHand = (gameState["community_cards"]).concat(us["hole_cards"])
+      const ourHand = gameState["community_cards"].concat(us["hole_cards"]);
 
       const goodHand = this.doWeHaveAGoodHand(gameState["community_cards"], us["hole_cards"]);
 
       const haveAStraight = this.doWeHaveStraight(ourHand);
 
-      if (haveAStraight) {
-        return bet(100000000)
+      const numberOfCards = ourHand.length;
+
+      if (haveAStraight && numberOfCards === 5) {
+        return bet(100000000);
+      }
+
+      if (haveAStraight && numberOfCards === 4) {
+        return bet(callAmount);
       }
 
       if (haveWeAlreadyBet && goodHand) {
@@ -30,7 +36,7 @@ class Player {
       }
 
       if (haveWeAlreadyBet) {
-        bet(callAmount) 
+        return bet(callAmount);
       }
 
       if (goodHand) {
@@ -78,11 +84,9 @@ class Player {
     return goodHand;
   }
 
-  doWeHaveStraight(hand) {
-    if (hand.length < 5) {
-      return false;
-    }
+  doWeHaveAFlush(hand) {}
 
+  doWeHaveStraight(hand) {
     const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
     const indexes = hand.map(card => ranks.indexOf(card.rank));
 
@@ -123,17 +127,17 @@ class Player {
   showdown(gameState) {}
 }
 
-const handTypes = [
-  "straightFlush",
-  "four",
-  "fullHouse",
-  "flush",
-  "straight",
-  "three",
-  "twoPair",
-  "pair",
-  "highCard",
-];
+const handTypes = {
+  straightFlush: 100,
+  four: 80,
+  fullHouse: 70,
+  flush: 60,
+  straight: 50,
+  three: 40,
+  twoPair: 30,
+  pair: 20,
+  highCard: 10,
+};
 
 const betterThan = (cardOne, cardTwo) => {
   const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
