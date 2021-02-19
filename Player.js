@@ -17,7 +17,7 @@ class Player {
 
       const betOrNot = this.doWeHaveAGoodHand(gameState["community_cards"], us["hole_cards"]);
 
-      haveWeAlreadyBet ? bet(currentBuyIn) : betOrNot ? bet(currentBuyIn) : bet(0);
+      haveWeAlreadyBet ? bet(callAmount) : betOrNot ? bet(currentBuyIn) : bet(0);
     } catch (e) {
       console.log(e);
       bet(0);
@@ -54,7 +54,7 @@ class Player {
     return goodHand;
   }
 
-  static showdown(gameState) {}
+  showdown(gameState) {}
 }
 
 module.exports = Player;
