@@ -4,19 +4,24 @@ class Player {
   }
 
   betRequest(gameState, bet) {
-    const { players, in_action, current_buy_in, minimum_raise } = gameState;
+    try {
+      const { players, in_action, current_buy_in, minimum_raise } = gameState;
 
-    const callAmount = current_buy_in - players[in_action]["bet"];
+      const callAmount = current_buy_in - players[in_action]["bet"];
 
-    const currentBuyIn = current_buy_in - players[in_action]["bet"] + minimum_raise;
+      const currentBuyIn = current_buy_in - players[in_action]["bet"] + minimum_raise;
 
-    const us = this.getOurPlayer(gameState);
+      const us = this.getOurPlayer(gameState);
 
-    const haveWeAlreadyBet = us.bet > 0;
+      const haveWeAlreadyBet = us.bet > 0;
 
-    const betOrNot = Math.floor(Math.random() * 2);
+      const betOrNot = Math.floor(Math.random() * 2);
 
-    haveWeAlreadyBet ? bet(callAmount) : betOrNot ? bet(callAmount) : bet(0);
+      haveWeAlreadyBet ? bet(callAmount) : betOrNot ? bet(callAmount) : bet(0);
+    } catch (e) {
+      console.log(e);
+      bet(0)
+    }
   }
 
   getOurPlayer(gameState) {
@@ -25,21 +30,29 @@ class Player {
     });
   }
 
-  // doWeHaveAGoodHand(communityCards, privateCards) {
-  //   const allCards =  communityCards.concat(privateCards)
+  // be wary of community card
+  doWeHaveAGoodHand(communityCards, privateCards) {
+    const allCards = communityCards.concat(privateCards);
 
-  //   allCards.reduce((acc, card) => {
-  //     if (acc[card.rank]) {
-  //       acc[card.rank] += 1
-  //     } else {
-  //       acc[card.rank] = 1
-  //     }
-  //     return acc
-  //   }, {})
+    const ranks = allCards.reduce((acc, card) => {
+      if (acc[card.rank]) {
+        acc[card.rank] += 1;
+      } else {
+        acc[card.rank] = 1;
+      }
+      return acc;
+    }, {});
 
-  //   for (const
+    let goodHand = false;
 
-  // }
+    for (const rank in ranks) {
+      if (ranks[rank] >= 2) {
+        goodHand = true;
+      }
+    }
+
+    return goodHand;
+  }
 
   static showdown(gameState) {}
 }

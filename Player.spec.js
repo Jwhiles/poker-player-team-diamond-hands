@@ -101,12 +101,24 @@ describe("test player", () => {
   const player = new Player();
 
   describe("bet request", () => {
-    it("returns 0", () => {
-      const bet = jest.fn();
-      player.betRequest(exampleGameState, bet);
+    // it("returns 0", () => {
+    //   const bet = jest.fn();
+    //   player.betRequest(exampleGameState, bet);
+    //   expect(bet).toHaveBeenCalledWith(1);
+    // });
+  });
 
-      expect(bet).toHaveBeenCalledWith(1);
+  describe("do we have a good hand", () => {
+    it("returns true", () => {
+      const privateCards = [{ rank: "10" }, { rank: "4" }];
+      const community = [{ rank: "10" }, { rank: "5" }];
+      expect(player.doWeHaveAGoodHand(privateCards, community)).toEqual(true);
+    });
+
+    it("returns false", () => {
+      const privateCards = [{ rank: "2" }, { rank: "4" }];
+      const community = [{ rank: "10" }, { rank: "5" }];
+      expect(player.doWeHaveAGoodHand(privateCards, community)).toEqual(false);
     });
   });
 });
-
