@@ -10,19 +10,21 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/', (req, res) => {
+  const player = new Player()
+
   const { action, game_state } = req.body;
 
   switch (action) {
     case 'version':
-      res.send(Player.VERSION);
+      res.send(player.VERSION);
       break;
     case 'bet_request':
-      Player.betRequest(JSON.parse(game_state), function(bet) {
+      player.betRequest(JSON.parse(game_state), function(bet) {
         res.json(bet);
       });
       break;
     case 'showdown':
-      Player.showdown(JSON.parse(game_state));
+      player.showdown(JSON.parse(game_state));
       res.send('Ok');
       break;
     case 'check':
