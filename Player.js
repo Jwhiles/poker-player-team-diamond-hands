@@ -1,3 +1,4 @@
+
 const tiers = [
   new Set(["AA", "KK", "AKs", "QQ", "AK"]),
   new Set(["JJ", "1010", "99"]),
@@ -11,7 +12,7 @@ const allin = 10000000000;
 
 class Player {
   VERSION() {
-    return "0.2";
+    return "to-the-moon";
   }
 
   getTierOfHand(ourHand) {
