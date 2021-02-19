@@ -17,7 +17,7 @@ class Player {
 
       const betOrNot = this.doWeHaveAGoodHand(gameState['community_cards'], us["hole_cards"]);
 
-      haveWeAlreadyBet ? bet(callAmount) : betOrNot ? bet(callAmount) : bet(0);
+      haveWeAlreadyBet ? bet(currentBuyIn) : betOrNot ? bet(currentBuyIn) : bet(0);
     } catch (e) {
       console.log(e);
       bet(0);
